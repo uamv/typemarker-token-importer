@@ -1,0 +1,25 @@
+@page {
+   margin-left: 0;
+   margin-right: 0;
+}
+
+.page-break {
+   page-break-after: always;
+}
+
+a {
+   text-decoration: none;
+}
+
+table {
+   border: 0;
+   width: 100%;
+}
+
+header, footer {
+   position: fixed;
+   left: 0;
+   right: 0;
+   margin: 0;
+   padding: 0;
+}
