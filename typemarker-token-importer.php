@@ -122,16 +122,25 @@ class Typemarker_TokenImporter {
    public function initialize_variables() {
 
       //// TODO: check that MainWP and Pro Reports is active
-      $tokens = MainWP_Pro_Reports_DB::get_instance()->get_tokens();
-      $this->tokens = array();
-      foreach ( $tokens as $token ) {
-         $this->tokens[ $token->token_name ] = $token->id;
+
+      if ( class_exists( 'MainWP_Pro_Reports_DB' ) ) {
+
+         $tokens = MainWP_Pro_Reports_DB::get_instance()->get_tokens();
+         $this->tokens = array();
+         foreach ( $tokens as $token ) {
+            $this->tokens[ $token->token_name ] = $token->id;
+         }
+
       }
 
-      $site_sql = MainWP_DB::Instance()->query( MainWP_DB::Instance()->getSQLSearchWebsitesForCurrentUser( null ) );
-      $this->sites = array();
-      while ( $site_sql && ( $site = @MainWP_DB::fetch_object( $site_sql ) ) ) {
-         $this->sites[ $site->url ] = $site->id;
+      if ( class_exists( 'MainWP_DB' ) ) {
+
+         $site_sql = MainWP_DB::Instance()->query( MainWP_DB::Instance()->getSQLSearchWebsitesForCurrentUser( null ) );
+         $this->sites = array();
+         while ( $site_sql && ( $site = @MainWP_DB::fetch_object( $site_sql ) ) ) {
+            $this->sites[ $site->url ] = $site->id;
+         }
+
       }
 
    } // end initialize_variables
@@ -141,15 +150,19 @@ class Typemarker_TokenImporter {
     */
    public function add_menu_pages() {
 
-      add_menu_page(
-         'Typemarker Token Importer',
-         'Token Importer',
-         'manage_options',
-         'typemarker-token-importer',
-         [ $this, 'render_token_importer_page' ],
-         'dashicons-upload',
-         3
-      );
+      if ( class_exists( 'MainWP_Pro_Reports_DB' ) && class_exists( 'MainWP_DB' ) ) {
+
+         add_menu_page(
+            'Typemarker Token Importer',
+            'Token Importer',
+            'manage_options',
+            'typemarker-token-importer',
+            [ $this, 'render_token_importer_page' ],
+            'dashicons-upload',
+            3
+         );
+
+      }
 
    } // end add_menu_page
 
