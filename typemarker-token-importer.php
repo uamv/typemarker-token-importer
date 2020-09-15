@@ -3,7 +3,7 @@
 Plugin Name: Typemarker Token Importer
 Plugin URI: https://typemarker.com
 Description: Allow for MainWP Pro Report token import via CSV file
-Version: 1.0.0
+Version: 1.0.1
 Author: Typewheel
 Author URI: http://typewheel.xyz
 License: GPL-2.0+
@@ -28,7 +28,7 @@ See http://www.gnu.org/licenses.
 * Define plugins globals.
 */
 
-define( 'TYPEMARKER_TI_VERSION', '1.0.0' );
+define( 'TYPEMARKER_TI_VERSION', '1.0.1' );
 define( 'TYPEMARKER_TI_DIR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'TYPEMARKER_TI_DIR_URL', plugin_dir_url( __FILE__ ) );
 define( 'TYPEMARKER_TI_STORE_URL', 'https://typemarker.com' );
@@ -121,7 +121,7 @@ class Typemarker_TokenImporter {
     */
    public function initialize_variables() {
 
-      //// TODO: check that MainWP and Pro Reports is active
+      // TODO: check that MainWP and Pro Reports is active
 
       if ( class_exists( 'MainWP_Pro_Reports_DB' ) ) {
 
@@ -133,7 +133,15 @@ class Typemarker_TokenImporter {
 
       }
 
-      if ( class_exists( 'MainWP_DB' ) ) {
+      if ( version_compare( MAINWP_VERSION, '4.1', '>=' ) && class_exists( 'MainWP\Dashboard\MainWP_DB' ) ) {
+
+         $site_sql = MainWP\Dashboard\MainWP_DB::instance()->query( MainWP\Dashboard\MainWP_DB::instance()->get_sql_search_websites_for_current_user( null ) );
+         $this->sites = array();
+         while ( $site_sql && ( $site = @MainWP\Dashboard\MainWP_DB::fetch_object( $site_sql ) ) ) {
+            $this->sites[ $site->url ] = $site->id;
+         }
+
+      } elseif ( version_compare( MAINWP_VERSION, '4.0', '<=' ) && class_exists( 'MainWP_DB' ) ) {
 
          $site_sql = MainWP_DB::Instance()->query( MainWP_DB::Instance()->getSQLSearchWebsitesForCurrentUser( null ) );
          $this->sites = array();
@@ -150,7 +158,7 @@ class Typemarker_TokenImporter {
     */
    public function add_menu_pages() {
 
-      if ( class_exists( 'MainWP_Pro_Reports_DB' ) && class_exists( 'MainWP_DB' ) ) {
+      if ( class_exists( 'MainWP_Pro_Reports_DB' ) && ( class_exists( 'MainWP_DB' ) || class_exists( 'MainWP\Dashboard\MainWP_DB' ) ) ) {
 
          add_menu_page(
             'Typemarker Token Importer',
