@@ -168,7 +168,7 @@ class Typemarker_TokenImporter {
     */
    public function add_menu_pages() {
 
-      if ( class_exists( 'MainWP_Pro_Reports_DB' ) && ( class_exists( 'MainWP_DB' ) || class_exists( 'MainWP\Dashboard\MainWP_DB' ) ) ) {
+      if ( ( class_exists( 'MainWP_Pro_Reports_DB' ) || class_exists( 'MainWP_CReport_DB' ) ) && ( class_exists( 'MainWP_DB' ) || class_exists( 'MainWP\Dashboard\MainWP_DB' ) ) ) {
 
          add_menu_page(
             'Typemarker Token Importer',
@@ -186,7 +186,7 @@ class Typemarker_TokenImporter {
 
    public function add_submenu_item( $sub_leftmenu ) {
 
-      if ( class_exists( 'MainWP_Pro_Reports_DB' ) && ( class_exists( 'MainWP_DB' ) || class_exists( 'MainWP\Dashboard\MainWP_DB' ) ) ) {
+      if ( ( is_plugin_active( 'mainwp-pro-reports-extension/mainwp-pro-reports-extension.php' ) || is_plugin_active( 'mainwp-client-reports-extension/mainwp-client-reports-extension.php' ) ) && ( class_exists( 'MainWP_DB' ) || class_exists( 'MainWP\Dashboard\MainWP_DB' ) ) ) {
 
          $item = array(
             'Pro Report Token Importer',
@@ -271,7 +271,7 @@ class Typemarker_TokenImporter {
                   }
 
                   // check token type and process
-                  if ( $tokenType == 'Pro Reports' ) {
+                  if ( $tokenType == 'Pro Reports' && class_exists( 'MainWP_Pro_Reports_DB' ) ) {
 
                      $expunge = MainWP_Pro_Reports_DB::get_instance()->delete_site_tokens( null, (int) $this->sites[ $site ] ); // remove all existing pro report tokens from site
 
@@ -297,7 +297,7 @@ class Typemarker_TokenImporter {
 
                      }
 
-                  } else if ( $tokenType == 'Client Reports' ) {
+                  } else if ( $tokenType == 'Client Reports' && class_exists( 'MainWP_CReport_DB' ) ) {
 
                      $expunge = MainWP_CReport_DB::get_instance()->delete_site_tokens( null, (int) $this->sites[ $site ] ); // remove all existing pro report tokens from site
 

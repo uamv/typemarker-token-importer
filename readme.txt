@@ -21,6 +21,7 @@ Allow for MainWP Pro Report and Client Report token import via CSV file
 📦 NEW: Add menu item to MainWP dashboard
 📦 NEW: Add ability to import tokens for Client Reports extension
 📦 NEW: Include CSV template file for Client Report tokens
+👌 IMPROVE: Restrict access depending on active report extensions
 
 = 1.0.1 =
 🐛 FIX: Fatal error with MainWP 4.1
