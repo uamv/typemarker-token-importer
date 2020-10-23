@@ -17,9 +17,12 @@ Allow for MainWP Pro Report token import via CSV file
 
 == Changelog ==
 
+= 1.0.2 // 2020.10-Oct.13 =
+📦 NEW: Add menu item to MainWP dashboard
+
 = 1.0.1 =
-* Fix fatal error with MainWP 4.1
-* Include CSV template with plugin files
+🐛 FIX: Fatal error with MainWP 4.1
+📦 NEW: Include CSV template with plugin files
 
 = 1.0.0 =
-* Initial Release
+🚀 RELEASE: Launch initial

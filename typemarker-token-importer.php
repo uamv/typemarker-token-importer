@@ -3,7 +3,7 @@
 Plugin Name: Typemarker Token Importer
 Plugin URI: https://typemarker.com
 Description: Allow for MainWP Pro Report token import via CSV file
-Version: 1.0.1
+Version: 1.0.2
 Author: Typewheel
 Author URI: http://typewheel.xyz
 License: GPL-2.0+
@@ -28,7 +28,7 @@ See http://www.gnu.org/licenses.
 * Define plugins globals.
 */
 
-define( 'TYPEMARKER_TI_VERSION', '1.0.1' );
+define( 'TYPEMARKER_TI_VERSION', '1.0.2' );
 define( 'TYPEMARKER_TI_DIR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'TYPEMARKER_TI_DIR_URL', plugin_dir_url( __FILE__ ) );
 define( 'TYPEMARKER_TI_STORE_URL', 'https://typemarker.com' );
@@ -91,8 +91,8 @@ class Typemarker_TokenImporter {
       // check available tokens, sites, and templates
       add_action( 'admin_init', [ $this, 'initialize_variables' ] );
 
-      // require license to use token importer
       add_action( 'admin_menu', [ $this, 'add_menu_pages' ], 99 );
+      add_filter( 'mainwp_main_menu_submenu', [ $this, 'add_submenu_item' ], 10 );
 
    } // end constructor
 
@@ -167,12 +167,36 @@ class Typemarker_TokenImporter {
             'typemarker-token-importer',
             [ $this, 'render_token_importer_page' ],
             'dashicons-upload',
-            3
+            4
          );
 
       }
 
    } // end add_menu_page
+
+   public function add_submenu_item( $sub_leftmenu ) {
+
+      if ( class_exists( 'MainWP_Pro_Reports_DB' ) && ( class_exists( 'MainWP_DB' ) || class_exists( 'MainWP\Dashboard\MainWP_DB' ) ) ) {
+
+         $item = array(
+            'Pro Report Token Importer',
+            'admin.php?page=typemarker-token-importer',
+            'mnage_options'
+         );
+
+         if ( is_plugin_active( 'typemarker/typemarker.php' ) ) {
+
+            $sub_leftmenu['typemarker'][] = $item;
+
+         }
+
+         $sub_leftmenu['Extensions'][] = $item;
+
+      }
+
+      return $sub_leftmenu;
+
+   }
 
    /**
     *  Render the HTML and handle form submission of Token Importer page.
@@ -383,5 +407,6 @@ class Typemarker_TokenImporter {
          echo '</div>';
 
       }
+
 
    }
