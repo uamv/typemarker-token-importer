@@ -1,0 +1,2 @@
+Site URL,Token Type,[client.site.name],[client.site.url],[client.company],[client.name],[client.contact.name],[client.contact.address.1],[client.contact.address.2],[client.city],[client.state],[client.zip],[client.phone],[client.email]
+http://site.dev/,Client Reports,,,,,,,,,,,,

@@ -2,7 +2,7 @@
 /*
 Plugin Name: Typemarker Token Importer
 Plugin URI: https://typemarker.com
-Description: Allow for MainWP Pro Report token import via CSV file
+Description: Allow for MainWP Pro Report and Client Report token import via CSV file
 Version: 1.0.2
 Author: Typewheel
 Author URI: http://typewheel.xyz
@@ -129,6 +129,16 @@ class Typemarker_TokenImporter {
 
          foreach ( $tokens as $token ) {
             $this->tokens['pro_reports'][ $token->token_name ] = $token->id;
+         }
+
+      }
+
+      if ( class_exists( 'MainWP_CReport_DB' ) ) {
+
+         $tokens = MainWP_CReport_DB::get_instance()->get_tokens();
+
+         foreach ( $tokens as $token ) {
+            $this->tokens['client_reports'][ $token->token_name ] = $token->id;
          }
 
       }
@@ -287,6 +297,32 @@ class Typemarker_TokenImporter {
 
                      }
 
+                  } else if ( $tokenType == 'Client Reports' ) {
+
+                     $expunge = MainWP_CReport_DB::get_instance()->delete_site_tokens( null, (int) $this->sites[ $site ] ); // remove all existing pro report tokens from site
+
+                     // loop through the columns of csv row
+                     foreach ( $csvData as $key => $tokenValue ) {
+
+                        // if available token, then let's add value from csv
+                        if ( isset( $this->tokens['client_reports'][ $tokenNames[ $key ] ] ) ) {
+
+                           $imported = MainWP_CReport_DB::get_instance()->add_token_site( (int) $this->tokens['client_reports'][ $tokenNames[ $key ] ], $tokenValue, (int) $this->sites[ $site ] );
+
+                           if ( $imported !== false ) {
+                              $processed[ $row ]['status'][ $key ] = 'success';
+                           } else {
+                              $processed[ $row ]['status'][ $key ] = $tokenNames[ $key ];
+                           }
+
+                        } else {
+
+                           $processed[ $row ]['status'][ $key ] = $tokenNames[ $key ];
+
+                        }
+
+                     }
+
                   } else {
 
                      $processed[ $row ]['status'] = 'fail-type';
@@ -323,6 +359,7 @@ class Typemarker_TokenImporter {
                   <thead>
                      <tr>
                         <th style="width: 50px;">Status</th>
+                        <th style="width: 100px;">Token Type</th>
                         <th style="width: 50px;">Row #</th>
                         <th>Site</th>
                         <th>Failure</th>
@@ -335,7 +372,7 @@ class Typemarker_TokenImporter {
 
                         // remove site and token columns from data, assigning site
                         $site = array_shift( $result['data'] );
-                        array_shift( $result['data'] );
+                        $token_type = array_shift( $result['data'] );
 
                         // set error message for failure type
                         if ( ! is_array( $result['status'] ) ) {
@@ -357,6 +394,7 @@ class Typemarker_TokenImporter {
 
                            echo '<tr class="fail-row">';
                            echo '<td><span class="dashicons dashicons-warning" style="color:red;"></span></td>';
+                           echo '<td>' . $token_type . '</td>';
                            echo '<td>' . $row . '</td>';
                            echo '<td>' . $site . '</td>';
                            echo '<td>' . $error . '</td>';
@@ -373,6 +411,7 @@ class Typemarker_TokenImporter {
                            if ( $tokenResult['success'] == count( $result['status'] ) ) {
                               echo '<tr>';
                               echo '<td><span class="dashicons dashicons-yes" style="color:green;"></span></td>';
+                              echo '<td>' . $token_type . '</td>';
                               echo '<td>' . $row . '</td>';
                               echo '<td>' . $site . '</td>';
                               echo '<td></td>';
@@ -381,6 +420,7 @@ class Typemarker_TokenImporter {
                            } else {
                               echo '<tr class="fail-tokens">';
                               echo '<td><span class="dashicons dashicons-warning" style="color:orange;"></span></td>';
+                              echo '<td>' . $token_type . '</td>';
                               echo '<td>' . $row . '</td>';
                               echo '<td>' . $site . '</td>';
                               echo '<td>Token Failures:<br />' . implode( '<br />', $tokenFailures ) . '</td>';
