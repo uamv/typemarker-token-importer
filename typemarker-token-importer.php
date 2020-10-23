@@ -126,9 +126,9 @@ class Typemarker_TokenImporter {
       if ( class_exists( 'MainWP_Pro_Reports_DB' ) ) {
 
          $tokens = MainWP_Pro_Reports_DB::get_instance()->get_tokens();
-         $this->tokens = array();
+
          foreach ( $tokens as $token ) {
-            $this->tokens[ $token->token_name ] = $token->id;
+            $this->tokens['pro_reports'][ $token->token_name ] = $token->id;
          }
 
       }
@@ -269,9 +269,9 @@ class Typemarker_TokenImporter {
                      foreach ( $csvData as $key => $tokenValue ) {
 
                         // if available token, then let's add value from csv
-                        if ( isset( $this->tokens[ $tokenNames[ $key ] ] ) ) {
+                        if ( isset( $this->tokens['pro_reports'][ $tokenNames[ $key ] ] ) ) {
 
-                           $imported = MainWP_Pro_Reports_DB::get_instance()->add_token_site( (int) $this->tokens[ $tokenNames[ $key ] ], $tokenValue, (int) $this->sites[ $site ] );
+                           $imported = MainWP_Pro_Reports_DB::get_instance()->add_token_site( (int) $this->tokens['pro_reports'][ $tokenNames[ $key ] ], $tokenValue, (int) $this->sites[ $site ] );
 
                            if ( $imported !== false ) {
                               $processed[ $row ]['status'][ $key ] = 'success';
