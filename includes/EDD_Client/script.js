@@ -13,32 +13,39 @@
             $('.dashicons', this).removeClass( 'dashicons-yes-alt' ).addClass('dashicons-update');
             $('.dashicons', this).addClass( 'spin' );
 
-            $.ajax({
-                context: this,
-                url: '/wp-admin/admin-ajax.php',
-                type: 'post',
-                dataType: 'json',
-                data: {
-                    nonce : $(this).attr('data-nonce'),
-                    action : $(this).attr('data-action'),
-                    operation: $(this).attr('data-operation'),
-                    license: $(this).prev('.edd-client-license-key').val(),
-                },
-                success: function (response) {
-                    $('.edd-client-msg').remove();
-                    $(this).parent().append('<div class="edd-client-msg">'+response.data+'</div>');
+            var edd_button = $(this);
 
-                    if( response.success === true ){
-                        $('.dashicons', this).removeClass( 'dashicons-update spin' ).addClass('dashicons-yes-alt');
-                        if(response.data === 'License deactivated for this site' || response.data === 'License successfully activated'){
-                            location.reload(false);
-                        }
-                    }else{
-                        $('.dashicons', this).removeClass( 'dashicons-update spin' ).addClass('dashicons-dismiss');
-                    }
-                }
+            wp.ajax.post( edd_button.attr('data-action'), {
+               headers: 'Content-type: application/json',
+               data: {
+                  nonce : edd_button.attr('data-nonce'),
+                  action : edd_button.attr('data-action'),
+                  operation: edd_button.attr('data-operation'),
+                  license: edd_button.prev('.edd-client-license-key').val(),
+               }
+            } )
+            .done( function( response ) {
+
+               $('.edd-client-msg').remove();
+               edd_button.parent().append('<div class="edd-client-msg">'+response.data+'</div>');
+
+               if( response.success === true ){
+                   edd_button.find('.dashicons').removeClass( 'dashicons-update spin' ).addClass('dashicons-yes-alt');
+                   if(response.data === 'License deactivated for this site' || response.data === 'License successfully activated'){
+                       location.reload(false);
+                   }
+               }else{
+                   edd_button.find('.dashicons').removeClass( 'dashicons-update spin' ).addClass('dashicons-dismiss');
+               }
+
+            } )
+            .fail( function(response) {
+
+               console.log(response);
 
             });
+
+
         });
     });
 })(jQuery);
