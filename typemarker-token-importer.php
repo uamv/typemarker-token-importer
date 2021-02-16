@@ -3,7 +3,7 @@
 Plugin Name: Typemarker Token Importer
 Plugin URI: https://typemarker.com
 Description: Allow for MainWP Pro Report and Client Report token import via CSV file
-Version: 1.0.2
+Version: 1.0.3
 Author: Typewheel
 Author URI: http://typewheel.xyz
 License: GPL-2.0+
@@ -28,7 +28,7 @@ See http://www.gnu.org/licenses.
 * Define plugins globals.
 */
 
-define( 'TYPEMARKER_TI_VERSION', '1.0.2' );
+define( 'TYPEMARKER_TI_VERSION', '1.0.3' );
 define( 'TYPEMARKER_TI_DIR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'TYPEMARKER_TI_DIR_URL', plugin_dir_url( __FILE__ ) );
 define( 'TYPEMARKER_TI_STORE_URL', 'https://typemarker.com' );

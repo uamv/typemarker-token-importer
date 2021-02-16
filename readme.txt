@@ -5,8 +5,8 @@ Donate link: https://typewheel.xyz/give?ref=Typemarker
 Tags: mainwp, dashboard, admin, branding, pro, reports
 Requires PHP: 5.6
 Requires at least: 3.1
-Tested up to: 5.4
-Stable tag: 1.0.2
+Tested up to: 5.6.1
+Stable tag: 1.0.3
 License: GPLv2 or later
 
 Allow for MainWP Pro Report and Client Report token import via CSV file
@@ -16,6 +16,9 @@ Allow for MainWP Pro Report and Client Report token import via CSV file
 Allow for MainWP Pro Report and Client Report token import via CSV file
 
 == Changelog ==
+
+= 1.0.3 // 2021.02-Feb.15 =
+👌 IMPROVE: Reduce potential for licensing activation issues
 
 = 1.0.2 // 2020.10-Oct.23 =
 📦 NEW: Add menu item to MainWP dashboard
