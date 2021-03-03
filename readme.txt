@@ -17,7 +17,7 @@ Allow for MainWP Pro Report and Client Report token import via CSV file
 
 == Changelog ==
 
-= 1.0.3 // 2021.02-Feb.15 =
+= 1.0.3 // 2021.03-Mar.02 =
 👌 IMPROVE: Reduce potential for licensing activation issues
 
 = 1.0.2 // 2020.10-Oct.23 =
